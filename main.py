@@ -1,9 +1,11 @@
+import glob
+import os
+
+import matplotlib.pyplot as plt
 import polars as pl
 import seaborn as sns
-import matplotlib.pyplot as plt
-import os
-import glob
-
+from polars import Series
+from scipy import stats
 
 def load_and_aggregate_logs(log_folder_path):
     """
@@ -52,34 +54,60 @@ def load_and_aggregate_logs(log_folder_path):
 
     return pl.DataFrame(aggregated_data)
 
+def tukys_fences(df_col: Series):
+    q1 = df_col.quantile(0.25)
+    q3 = df_col.quantile(0.75)
+    iqr = q3 - q1
+    return q1 - iqr * 1.5, q3 + iqr * 1.5
 
-# --- Main Script ---
-
-# 1. Load Data
-log_folder = "./logs"  # Ensure this matches your folder name
+log_folder = "./logs"
 df = load_and_aggregate_logs(log_folder)
 
-# Check data before plotting
-print(df.head())
-
 df_no_music = df.filter(pl.col("Condition") == "No Music")
+success_no_music = df_no_music["Success_Count"]
 df_music = df.filter(pl.col("Condition") == "Music")
-print(df_no_music.mean(), df_music.mean())
+success_music = df_music["Success_Count"]
 
+order = ["No Music", "Music"]
 
-# 2. Plotting (Slopegraph)
+# Visualization
+sns.boxplot(
+    data=df,
+    x="Condition",
+    y="Success_Count",
+    order=order,
+    showfliers=True
+)
+
+# Overlay individual subject points for context
+sns.stripplot(
+    data=df,
+    x="Condition",
+    y="Success_Count",
+    order=order,
+    color="black",
+    size=6,
+    jitter=True,
+    alpha=0.7
+)
+
+plt.title("Distribution of Successful Clicks: With vs Without Music", fontsize=14)
+plt.ylabel("Number of Successful Clicks")
+plt.xlabel("Condition")
+plt.tight_layout()
+plt.show()
+
 sns.set_theme(style="whitegrid")
 plt.figure(figsize=(10, 6))
 
-# A pointplot connects points with the same 'hue' (Subject_ID) across X variables
 sns.pointplot(
     data=df,
     x="Condition",
     y="Success_Count",
     hue="Subject_ID",
-    palette="viridis",  # Distinct colors for subjects
+    palette="viridis",
     markers="o",
-    dodge=False  # Important: keeps lines straight (slopegraph style)
+    dodge=False
 )
 
 plt.title("Impact of Music on Click Success (Within-Subject)", fontsize=14)
@@ -91,3 +119,27 @@ plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', title="Subject ID")
 plt.tight_layout()
 
 plt.show()
+
+# Test for normality
+shapiro_no_music = stats.shapiro(success_no_music)
+shapiro_music = stats.shapiro(success_music)
+
+print("Shapiro Wilk")
+print(f"No Music p-value: {shapiro_no_music.pvalue}")
+print(f"No Music p-value: {shapiro_music.pvalue}")
+
+# Test for variance equality
+levene = stats.levene(success_no_music, success_music)
+
+print("Levene")
+print(f"Levene p-value: {levene.pvalue}")
+
+# Descriptive statistics
+print("Descriptive statistics")
+print(f"No Music mean: {success_no_music.mean()}, std: {success_no_music.std()}, fences: {tukys_fences(success_no_music)}")
+print(f"Music mean: {success_music.mean()}, std: {success_music.std()}, fences: {tukys_fences(success_music)}")
+
+# Related t-test
+t_test_rel = stats.ttest_rel(success_no_music, success_music)
+print("Related T-Test")
+print(f"T-Test p-value: {t_test_rel.pvalue}")
