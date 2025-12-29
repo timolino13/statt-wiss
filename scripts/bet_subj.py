@@ -49,9 +49,9 @@ def main() -> None:
     analyze(df_p1_music, df_p1_no_music)
 
     # Second test per group: Group A -> Music, Group B -> No Music
-    df_p2_music = df.filter((pl.col("Group") == group_a) & (pl.col("Condition") == "Music"))
-    df_p2_no_music = df.filter((pl.col("Group") == group_b) & (pl.col("Condition") == "No Music"))
-    analyze(df_p2_music, df_p2_no_music)
+    # df_p2_music = df.filter((pl.col("Group") == group_a) & (pl.col("Condition") == "Music"))
+    # df_p2_no_music = df.filter((pl.col("Group") == group_b) & (pl.col("Condition") == "No Music"))
+    # analyze(df_p2_music, df_p2_no_music)
 
 
 if __name__ == "__main__":
