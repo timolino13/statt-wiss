@@ -28,11 +28,11 @@ def analyze(df_music: DataFrame, df_no_music: DataFrame) -> None:
     print("\n--- Assumptions Check H1 ---")
     check_assumptions(scores_music, scores_no_music, "greater")
 
-    # H2: Error_Rate (music > no_music)
+    # H2: Error_Rate (music < no_music)
     error_rate_music = df_music["Error_Rate"]
     error_rate_no_music = df_no_music["Error_Rate"]
     print("\n--- Assumptions Check H2 ---")
-    check_assumptions(error_rate_music, error_rate_no_music, "greater")
+    check_assumptions(error_rate_music, error_rate_no_music, "less")
 
 
 def main() -> None:
