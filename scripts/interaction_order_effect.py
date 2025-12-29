@@ -1,11 +1,12 @@
 import matplotlib.pyplot as plt
 import polars as pl
 import seaborn as sns
-import helpers
+
+from helpers import check_assumptions, load_and_aggregate_logs
 
 def main(log_folder: str = "../logs"):
     # --- Execution ---
-    df = helpers.load_and_aggregate_logs(log_folder)
+    df = load_and_aggregate_logs(log_folder)
 
     # Sort for better plotting order
     df = df.sort("Condition")
@@ -67,7 +68,7 @@ def main(log_folder: str = "../logs"):
 
     # If these two means are significantly different, you have a strong Order Effect.
     print(f"Interaction Test (Order Effect)")
-    helpers.check_assumptions(group_a_diffs, group_b_diffs, 'two-sided')
+    check_assumptions(group_a_diffs, group_b_diffs, 'two-sided')
 
 if __name__ == "__main__":
     main()

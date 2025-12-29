@@ -1,20 +1,20 @@
 import polars as pl
 from polars import DataFrame
 
-import helpers
+from helpers import find_outliers, check_assumptions, load_and_aggregate_logs
 
 def analyze(df_music: DataFrame, df_no_music: DataFrame) -> None:
     """Print outliers and run assumption checks for Success_Count and Error_Rate."""
     print("\n--- Finding Outliers ---")
-    out_sc_music = helpers.find_outliers(df_music, "Success_Count")
-    out_sc_no = helpers.find_outliers(df_no_music, "Success_Count")
+    out_sc_music = find_outliers(df_music, "Success_Count")
+    out_sc_no = find_outliers(df_no_music, "Success_Count")
     print("Outliers music by Success_Count")
     print(out_sc_music["Subject_ID"])
     print("Outliers no_music by Success_Count")
     print(out_sc_no["Subject_ID"])
 
-    out_e_music = helpers.find_outliers(df_music, "Error_Rate")
-    out_e_no = helpers.find_outliers(df_no_music, "Error_Rate")
+    out_e_music = find_outliers(df_music, "Error_Rate")
+    out_e_no = find_outliers(df_no_music, "Error_Rate")
     print("\nOutliers music by Error_Rate")
     print(out_e_music["Subject_ID"])
     print("Outliers no_music by Error_Rate")
@@ -24,17 +24,17 @@ def analyze(df_music: DataFrame, df_no_music: DataFrame) -> None:
     scores_music = df_music["Success_Count"]
     scores_no_music = df_no_music["Success_Count"]
     print("\n--- Assumptions Check H1 ---")
-    helpers.check_assumptions(scores_music, scores_no_music, "greater")
+    check_assumptions(scores_music, scores_no_music, "greater")
 
     # H2: Error_Rate (music > no_music)
     error_rate_music = df_music["Error_Rate"]
     error_rate_no_music = df_no_music["Error_Rate"]
     print("\n--- Assumptions Check H2 ---")
-    helpers.check_assumptions(error_rate_music, error_rate_no_music, "greater")
+    check_assumptions(error_rate_music, error_rate_no_music, "greater")
 
 
 def main(log_folder: str = "../logs") -> None:
-    df = helpers.load_and_aggregate_logs(log_folder)
+    df = load_and_aggregate_logs(log_folder)
 
     group_a = "Group A (NM->M)"
     group_b = "Group B (M->NM)"
