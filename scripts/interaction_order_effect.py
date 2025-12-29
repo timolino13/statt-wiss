@@ -1,10 +1,13 @@
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import polars as pl
 import seaborn as sns
 
 from helpers import check_assumptions, load_and_aggregate_logs
 
-def main(log_folder: str = "../logs"):
+def main():
+    log_folder = Path(__file__).resolve().parent.parent / "logs"
     # --- Execution ---
     df = load_and_aggregate_logs(log_folder)
 

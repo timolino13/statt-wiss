@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import polars as pl
 from polars import DataFrame
 
@@ -33,7 +35,9 @@ def analyze(df_music: DataFrame, df_no_music: DataFrame) -> None:
     check_assumptions(error_rate_music, error_rate_no_music, "greater")
 
 
-def main(log_folder: str = "../logs") -> None:
+def main() -> None:
+    log_folder = Path(__file__).resolve().parent.parent / "logs"
+
     df = load_and_aggregate_logs(log_folder)
 
     group_a = "Group A (NM->M)"
