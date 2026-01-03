@@ -1,9 +1,36 @@
+import datetime
 from pathlib import Path
 
 import polars as pl
 from polars import DataFrame
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 from helpers import find_outliers, check_assumptions, load_and_aggregate_logs
+
+def _plot_box_and_hist(df_music: DataFrame, df_no_music: DataFrame) -> None:
+    dfp = pl.concat([df_music.select(["Subject_ID", "Success_Count", "Error_Rate", "Condition"]),
+                     df_no_music.select(["Subject_ID", "Success_Count", "Error_Rate", "Condition"])])
+
+    # Boxplot: Success_Count
+    plt.figure(figsize=(6, 4))
+    sns.boxplot(x="Condition", y="Success_Count", data=dfp, palette="Set2", hue="Condition", width=0.5, whis=(0, 100))
+    sns.stripplot(x="Condition", y="Success_Count", data=dfp, color="0.2", size=4, jitter=True)
+    plt.title(f"Anzahl korrekt geklickter Formen")
+    plt.ylabel("Anzahl korrekte Klicks")
+    plt.tight_layout()
+    plt.show()
+
+
+    # Boxplot: Error_Rate
+    plt.figure(figsize=(6, 4))
+    sns.boxplot(x="Condition", y="Error_Rate", data=dfp, palette="Set2", hue="Condition", width=0.5, whis=(0, 100))
+    sns.stripplot(x="Condition", y="Error_Rate", data=dfp, color="0.2", size=4, jitter=True)
+    plt.title(f"Fehlerrate")
+    plt.ylabel("Fehlerrate in %")
+    plt.tight_layout()
+    plt.show()
+
 
 def analyze(df_music: DataFrame, df_no_music: DataFrame) -> None:
     """Print outliers and run assumption checks for Success_Count and Error_Rate."""
@@ -33,6 +60,8 @@ def analyze(df_music: DataFrame, df_no_music: DataFrame) -> None:
     print("\n--- Assumptions Check H2: Error_Rate (music < no_music) ---")
     check_assumptions(error_rate_music, error_rate_no_music, "less")
 
+
+    _plot_box_and_hist(df_music, df_no_music)
 
 def main() -> None:
     log_folder = Path(__file__).resolve().parent.parent / "logs"
