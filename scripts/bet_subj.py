@@ -46,20 +46,11 @@ def main() -> None:
     print("\n=== Test 1: Group A -> No Music, Group B -> Music ===")
     df_p1_music = df.filter((pl.col("Group") == group_b) & (pl.col("Condition") == "Music"))
     df_p1_no_music = df.filter((pl.col("Group") == group_a) & (pl.col("Condition") == "No Music"))
-    print(f"Preparing to analyze: Music rows={df_p1_music.height}, No Music rows={df_p1_no_music.height}")
 
-    def _mean_std(s: pl.Series):
-       return round(s.mean(), 2), round(s.std(), 2)
-
-    m_sc_mean, m_sc_std = _mean_std(df_p1_music["Success_Count"])
-    n_sc_mean, n_sc_std = _mean_std(df_p1_no_music["Success_Count"])
-    m_er_mean, m_er_std = _mean_std(df_p1_music["Error_Rate"])
-    n_er_mean, n_er_std = _mean_std(df_p1_no_music["Error_Rate"])
-
-    print(f"Music Success_Count mean={m_sc_mean}, std={m_sc_std}")
-    print(f"No Music Success_Count mean={n_sc_mean}, std={n_sc_std}")
-    print(f"Music Error_Rate mean={m_er_mean}, std={m_er_std}")
-    print(f"No Music Error_Rate mean={n_er_mean}, std={n_er_std}")
+    print(f"Music Success_Count: {df_p1_music["Success_Count"].describe()}")
+    print(f"No Music Success_Count: {df_p1_no_music["Success_Count"].describe()}")
+    print(f"Music Error_Rate: {df_p1_music["Error_Rate"].describe()}")
+    print(f"No Music Error_Rate: {df_p1_no_music["Error_Rate"].describe()}")
 
     analyze(df_p1_music, df_p1_no_music)
 
@@ -69,15 +60,10 @@ def main() -> None:
     df_p2_no_music = df.filter((pl.col("Group") == group_b) & (pl.col("Condition") == "No Music"))
     print(f"Preparing to analyze: Music rows={df_p2_music.height}, No Music rows={df_p2_no_music.height}")
 
-    m2_sc_mean, m2_sc_std = _mean_std(df_p2_music["Success_Count"])
-    n2_sc_mean, n2_sc_std = _mean_std(df_p2_no_music["Success_Count"])
-    m2_er_mean, m2_er_std = _mean_std(df_p2_music["Error_Rate"])
-    n2_er_mean, n2_er_std = _mean_std(df_p2_no_music["Error_Rate"])
-
-    print(f"Music Success_Count mean={m2_sc_mean}, std={m2_sc_std}")
-    print(f"No Music Success_Count mean={n2_sc_mean}, std={n2_sc_std}")
-    print(f"Music Error_Rate mean={m2_er_mean}, std={m2_er_std}")
-    print(f"No Music Error_Rate mean={n2_er_mean}, std={n2_er_std}")
+    print(f"Music Success_Count: {df_p2_music["Success_Count"].describe()}")
+    print(f"No Music Success_Count: {df_p2_no_music["Success_Count"].describe()}")
+    print(f"Music Error_Rate: {df_p2_music["Error_Rate"].describe()}")
+    print(f"No Music Error_Rate: {df_p2_no_music["Error_Rate"].describe()}")
 
     analyze(df_p2_music, df_p2_no_music)
 

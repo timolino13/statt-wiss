@@ -2,6 +2,7 @@ import glob
 import os
 from typing import Literal
 
+import numpy as np
 import polars as pl
 from polars import Series, DataFrame
 from scipy import stats
@@ -45,6 +46,31 @@ def load_and_aggregate_logs(log_folder_path):
 
     return pl.DataFrame(aggregated_data)
 
+def cohens_d(s1: Series, s2: Series) -> float:
+    """
+    Compute Cohen\`s d for two independent samples using pooled standard deviation.
+    Returns NaN if not enough data or pooled std is zero.
+    """
+
+    a = s1.to_numpy()
+    b = s2.to_numpy()
+
+    n1 = a.size
+    n2 = b.size
+    if n1 < 2 or n2 < 2:
+        return float("nan")
+
+    m1 = a.mean()
+    m2 = b.mean()
+    sd1 = a.std(ddof=1)
+    sd2 = b.std(ddof=1)
+
+    pooled = np.sqrt(((n1 - 1) * sd1 ** 2 + (n2 - 1) * sd2 ** 2) / (n1 + n2 - 2))
+    if pooled == 0:
+        return float("nan")
+
+    return (m1 - m2) / pooled
+
 def check_assumptions(s1: Series, s2: Series, alternative: Literal["two-sided", "less", "greater"]):
     norm_m = stats.shapiro(s1)
     norm_nm = stats.shapiro(s2)
@@ -62,7 +88,10 @@ def check_assumptions(s1: Series, s2: Series, alternative: Literal["two-sided", 
         print("\nNo Normality, use Mann-Whitney U test:")
         res = stats.mannwhitneyu(s1, s2, alternative=alternative)
 
+    print(f"Statistics: {res.statistic:.4f}")
     print(f"Final p-value: {res.pvalue:.4f}")
+    print(f"Cohen's d: {cohens_d(s1, s2):.4f}")
+
 
 def find_outliers(df: DataFrame, col: str):
     Q1 = df[col].quantile(0.25)

@@ -69,6 +69,9 @@ def main():
     group_a_diffs = df_paired.filter(pl.col("Group") == "Group A (NM->M)")["Music_Effect"]
     group_b_diffs = df_paired.filter(pl.col("Group") == "Group B (M->NM)")["Music_Effect"]
 
+    print("Difference in Success Count Music: ", group_a_diffs.describe())
+    print("Difference in Success Count NM: " , group_b_diffs.describe())
+
     # If these two means are significantly different, you have a strong Order Effect.
     print(f"Interaction Test (Order Effect)")
     check_assumptions(group_a_diffs, group_b_diffs, 'two-sided')
