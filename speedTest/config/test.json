@@ -1,0 +1,45 @@
+{
+    "timer_duration": 30,
+    "shapes": [
+        {
+            "type": "circle",
+            "id": "c1",
+            "x": 83,
+            "y": 44,
+            "color": "gray",
+            "radius": 100
+        },
+        {
+            "type": "circle",
+            "id": "c2",
+            "x": 723,
+            "y": 467,
+            "color": "gray",
+            "radius": 100
+        },
+        {
+            "type": "circle",
+            "id": "c3",
+            "x": 91,
+            "y": 519,
+            "color": "gray",
+            "radius": 100
+        },
+        {
+            "type": "circle",
+            "id": "c4",
+            "x": 591,
+            "y": 90,
+            "color": "gray",
+            "radius": 100
+        },
+        {
+            "type": "circle",
+            "id": "c5",
+            "x": 298,
+            "y": 309,
+            "color": "gray",
+            "radius": 100
+        }
+    ]
+}

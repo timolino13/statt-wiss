@@ -1,0 +1,47 @@
+{
+    "timer_duration": 10,
+    "shapes": [
+        {
+            "type": "square",
+            "id": "s1",
+            "x": 69,
+            "y": 56,
+            "color": "green",
+            "size": 150
+        },
+        {
+            "type": "circle",
+            "id": "c1",
+            "x": 723,
+            "y": 467,
+            "color": "blue",
+            "radius": 100
+        },
+        {
+            "type": "rectangle",
+            "id": "r1",
+            "x": 69,
+            "y": 596,
+            "color": "red",
+            "width": 500,
+            "height": 75
+        },
+        {
+            "type": "triangle",
+            "id": "t1",
+            "x": 235,
+            "y": 309,
+            "color": "teal",
+            "size": 200
+        },
+        {
+            "type": "ellipse",
+            "id": "e1",
+            "x": 594,
+            "y": 80,
+            "color": "yellow",
+            "rx": 150,
+            "ry": 70
+        }
+    ]
+}

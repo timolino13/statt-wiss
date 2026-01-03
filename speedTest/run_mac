@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -e  # Abbruch bei Fehlern
+
+echo "Checking for uv..."
+
+# Prüfen, ob uv installiert ist
+if ! command -v uv >/dev/null 2>&1; then
+    echo "================================="
+    echo "Installing uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+
+echo "================================="
+echo "Starting speedtest application..."
+uv run ./src/main.py
